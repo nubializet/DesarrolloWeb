@@ -134,7 +134,7 @@
 
           // $('.tap-target').tapTarget('open');            
           //Practicas con JQuery 21/05/17
-          $("#nombreapp").html("<b>Curso desarrollo web</b>");
+          $("#nombreapp").html("<b>Curso desarrollo WEB</b>");
           $("#contenedoraplicaciones").html("");
           $("#contenedoraplicaciones")
               .html("")
@@ -147,7 +147,7 @@
 
                 $.each(data,function(index, publicacion){
                     console.log(publicacion);
-                    $("#contenedoraplicaciones").prepend('<div class="card hoverable" id="publicacion_'+publicacion.id+'"><div class="card-image waves-effect waves-block waves-light"> <img class="activator" src="'+publicacion.foto+'"> </div> <div class="card-content"> <div class="row valign-wrapper"><div class="col s3 "> <img src="'+publicacion.avatar+'" style="border-radius: 50%;"> </div> <div class="col s9"> <b>'+publicacion.usuario+'</b> Publicó . </div> </div> <div class="row"> <div class="col"> <span class="grey-text text-darken-4">'+publicacion.contenido+'</span> </div> </div> <div class="row"> <div class="col s6"> <a href="javascript:;" class="like"><i class="material-icons blue-text">thumb_up</i><span class="likes">' + publicacion.likes +' </span> Me gusta</a> </div> <div class="col s6 right-align">'+publicacion.fecha+'</div> </div> </div> </div>');
+                    $("#contenedoraplicaciones").prepend('<div class="card hoverable" id="publicacion_'+publicacion.id+'"><div class="card-image waves-effect waves-block waves-light"> <img class="activator" src="'+publicacion.foto+'"> </div> <div class="card-content"> <div class="row valign-wrapper"><div class="col s3 "> <img src="'+publicacion.avatar+'" style="border-radius: 50%;"> </div> <div class="col s9"> <b>'+publicacion.usuario+'</b> Publicó . </div> </div> <div class="row"> <div class="col"> <span class="grey-text text-darken-4">'+publicacion.contenido+'</span> </div> </div> <div class="row"> <div class="col s6"> <a href="javascript:;" class="like"><i class="material-icons blue-text">thumb_up</i><span class="likes">' + publicacion.likes +' </span> Me gusta</a> <a href="javascript:;" class="unlike"><i class="material-icons blue-text">thumb_down</i><span class="likes">' + publicacion.likes +' </span> No me gusta</a> </div> <div class="col s6 right-align">'+publicacion.fecha+'</div> </div> </div> </div>');
                 });
                 //Lee la cantidad de likes de una publicacion 
                  $(".like").on("click", function(e){
@@ -160,6 +160,22 @@
                     numero_likes = numero_likes + 1;
 
                     $(this).find(".likes").text(numero_likes);
+
+                  });
+
+                  $(".unlike").on("click", function(e){
+                    e.preventDefault();
+                    //alert("Le diste NO Me gusta");
+
+                    var numero_likes = $(this).find(".likes").text();
+                    //alert(numero_likes + " Likes");
+                    //Aumenta el número de like
+                    numero_likes = parseInt(numero_likes);
+                    numero_likes = numero_likes - 1;
+
+                    $(this).find(".likes").text(numero_likes);
+
+
                   });
                         
          
