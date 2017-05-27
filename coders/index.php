@@ -160,6 +160,7 @@
                     //Aumenta el número de like
                     numero_likes = parseInt(numero_likes);
                     numero_likes = numero_likes + 1;
+                    $(".like").hide();
                     $(".unlike").show();
                     $(this).find(".likes").text(numero_likes);
 
@@ -174,7 +175,8 @@
                     //Aumenta el número de like
                     numero_likes = parseInt(numero_likes);
                     numero_likes = numero_likes - 1;
-
+                    $(".unlike").hide();
+                    $(".like").show();
                     $(this).find(".likes").text(numero_likes);
 
 
