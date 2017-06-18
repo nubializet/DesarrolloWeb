@@ -75,7 +75,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/coders/config.php";
                     </div>
                     <div class="row">
                         <div class="col s12 center-align">
-                            o <a href="<?php echo APPNAME; ?>/registro/">Crea una cuenta</a>
+                            o <a href="<?php echo APPNAME; ?>/registro.php">Crea una cuenta</a>
                         </div>
                     </div>
                   </form>
@@ -107,20 +107,15 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/coders/config.php";
     <script>
 
     procesar_respuesta = function(res){
-      // console.log(res);
-      // alert(res);
-
-      if(res.correcta == true)
-      {
-        alert(res.mensaje);
-        location.href = "index.php";
-      }
-      else
-      {
-        alert(res.mensaje);
-        $("#email").val("");
-        $("#password").val("")
-      }
+      if(res.success)
+        {
+          alert(res.mensaje);
+          location.href = "index.php";
+        }
+        else
+        {
+          alert(res.mensaje);
+        }
     }
       
     $("#FormLogin").on("submit", function(e){
@@ -130,7 +125,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/coders/config.php";
       var data = $(this).serialize();
       // alert(data)
 
-      $.post("server.php", data, procesar_respuesta , "json");
+      $.post("views/loginService.php", data, procesar_respuesta , "json");
 
     });
 

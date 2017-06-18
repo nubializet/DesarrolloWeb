@@ -1,5 +1,10 @@
 <?php 
 session_start();
+// echo "<pre>";
+//  var_dump($_SESSION);
+//  echo "</pre>"; 
+//  exit();
+
 if(!isset($_SESSION["login"]))
 {
   echo "<script>location.href='login.php';</script>;";
@@ -82,6 +87,26 @@ if(!isset($_SESSION["login"]))
     </ul>
   </div>
 </nav>
+
+    <!-- Modal Structure -->
+    <div id="modalPublicacion" class="modal">
+
+      <div class="modal-content">
+        <h4>Nueva Publicación</h4>
+        <div class="row">
+          <form id="formPublicacion" class="">
+            <div class="input-field col s12">
+              <textarea id="contenido" name="contenido" class="materialize-textarea"></textarea>
+              <label form="contenido">Contenido:</label>
+            </div>
+          </form>
+        </div>
+      </div>
+        <div class="modal-footer">
+      <a href="#!" id="guardarPublicacion" class="modal-action modal-close waves-effect waves-green btn-flat">Guardar</a>
+    </div>
+    </div>
+
 <div class="row">
     <div class="col s4 offset-s4" id="contenedorPublicaciones">
     
@@ -132,15 +157,35 @@ if(!isset($_SESSION["login"]))
         <script>
 
           $(".button-collapse").sideNav();
+          $('#modalPublicacion').modal();
 
           $(".mostrar").on("click", function(){
-            // alert("LOL")
-            $('.button-collapse').sideNav('show');
-          })
+            $('#modalPublicacion').modal('open');     
+          }); 
 
-          $(".ocultar").on("click", function(){
-            $('.tap-target').tapTarget('open');            
-          })
+          $('#guardarPublicacion').on("click", function(e){
+            e.preventDefault();
+            var form_data = $('#formPublicacion').serialize();
+            console.log(form_data);
+
+            $.post("views/publicacionService.php", form_data, function(res){
+              console.log(res);
+              if(res.success){
+                alert(res.mensaje);
+                $('#modalPublicacion').modal('close');
+              }
+              else{
+                alert(res.mensaje);
+              }
+            },"json");
+       
+          }); 
+
+          // $(".mostrar").on("click", function(){
+          //    // alert("LOL")    +           $('#modalPublicacion').modal('open');
+          //   $('.button-collapse').sideNav('show');     
+          // });
+         
 
           // $('.tap-target').tapTarget('open');   
 
