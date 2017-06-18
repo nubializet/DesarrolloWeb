@@ -7,7 +7,7 @@
         </div>
         <div class="col m5 s12">
             <div class="row">
-                <form id ="login" action="server.php" method="GET" class="col s12">
+                <form id="FormLogin" action="server.php" method="GET" class="col s12">
                   <div class="row">                            
                     <div class="col s2">
                         <h1 class="logo">

@@ -1,13 +1,10 @@
 <?php 
-
-
-    session_start();
-    if(!isset($_SESSION["login"]))
-    {
-      echo "<script>location.href='login.php';</script>;";
-    }
-    
-    require_once $_SERVER["DOCUMENT_ROOT"] . "/coders/server/config.php";
+session_start();
+if(!isset($_SESSION["login"]))
+{
+  echo "<script>location.href='login.php';</script>;";
+}
+    require_once $_SERVER["DOCUMENT_ROOT"] . "/coders/config.php";
 
     $module = "home";
     if(isset($_GET["module"]) && $_GET["module"] != "")

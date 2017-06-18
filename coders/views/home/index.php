@@ -17,7 +17,7 @@
     <ul class="side-nav" id="mobile-demo">
       <li>
         <div class="row">
-            <div class="col s4" id="contenedoraplicaciones">                          
+            <div class="col s4">                          
               <img src="<?php echo APP; ?>/img/logo.png" alt="logo" class="avatar" style="width: 70px; border-radius: 50%;">              
             </div>
             <div class="col s8">
@@ -44,160 +44,179 @@
     </ul>
   </div>
 </nav>
-<div class="row"><!--Publicacones-->
-  <div class="col s6 offset-s3"><!--Offset: deja la columna en el centro-->
-
-    <div class="card hoverable"><!--Tarjeta1-->
+<div class="row">
+  <div class="col s4 offset-s4" id="contenedorPublicaciones">
+    
+    <div class="card">
       <div class="card-image waves-effect waves-block waves-light">
-        <img class="activator" src="img/publicacion.jpg">
+        <img class="" src="img/publicacion.jpg">
       </div>
       <div class="card-content">
-        <div class="row valign-wrapper"><!--FilaA-->
-          <div class="col s3 "><!--ColumnaA1: Imagen de usuario border-radius: 50%: forma circulas imagen-->
-            <img src="img/avatar3.jpg" style="border-radius: 50%;">
+        <div class="row">
+          <div class="col s3 valign-wrapper">          
+            <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> -->          
+            <img src="img/avatar2.jpg" alt="avatar" style="border-radius: 50%;">
           </div>
-          <div class="col s9"><!--ColumnaA2: Nombre del usuario-->
-            <b>Nombre de Usuario</b> publicó.
-          </div>
-        </div>  
-        <div class="row"><!--FilaB-->
-          <div class="col">
-            <span class="grey-text text-darken-4">Contenido de la publicación</span>
+          <div class="col s9">
+              <div class="">
+                <br>
+                <b>Nombre de usuario </b>publicó.
+              </div>       
           </div>
         </div>
-        <div class="row"><!--FilaC-->
+        <div class="row">
+          <div class="col s12">
+            Contenido de la publicación.
+          </div>
+        </div>
+        <div class="row">
           <div class="col s6">
-            <a href=""><i class="material-icons">thumb_up</i></a>10 me gusta
+            <i class="material-icons blue-text">thumb_up</i> 10 Me gusta
           </div>
           <div class="col s6 right-align">
-            Hace una hora
+            hace 1 hora
           </div>
         </div>
-      </div>
-    </div><!--Termina Tarjeta1-->
+      </div>    
+    </div>
 
-    <div class="card hoverable"><!--Tarjeta2-->
+    <div class="card">
       <div class="card-image waves-effect waves-block waves-light">
-        <img class="activator" src="img/publicacion2.jpg">
+        <img class="" src="img/publicacion1.jpg">
       </div>
-      <div class="card-content"><!--Tarjeta-->
-        <div class="row valign-wrapper"><!--FilaA-->
-          <div class="col s3 "><!--ColumnaA1: Imagen de usuario border-radius: 50%: forma circulas imagen-->
-            <img src="img/avatar2.jpg" style="border-radius: 50%;">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s3 valign-wrapper">          
+            <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> -->          
+            <img src="img/avatar3.jpg" alt="avatar" style="border-radius: 50%;">
           </div>
-          <div class="col s9"><!--ColumnaA2: Nombre del usuario-->
-            <b>Nombre de Usuario</b> publicó.
-          </div>
-        </div>  
-        <div class="row"><!--FilaB-->
-          <div class="col">
-            <span class="grey-text text-darken-4">Contenido de la publicación</span>
+          <div class="col s9">
+              <div class="">
+                <br>
+                <b>Nombre de usuario </b>publicó.
+              </div>       
           </div>
         </div>
-        <div class="row"><!--FilaC-->
+        <div class="row">
+          <div class="col s12">
+            Contenido de la publicación.
+          </div>
+        </div>
+        <div class="row">
           <div class="col s6">
-            <a href=""><i class="material-icons">thumb_up</i></a>10 me gusta
+            <i class="material-icons blue-text">thumb_up</i> 20 Me gusta
           </div>
           <div class="col s6 right-align">
-            Hace una hora
+            hace 1 hora
           </div>
         </div>
-      </div>
-    </div><!--Termina Tarjeta2-->
+      </div>    
+    </div>
 
-    <div class="card hoverable"><!--Tarjeta3-->
+    <div class="card">
       <div class="card-image waves-effect waves-block waves-light">
-        <img class="activator" src="img/publicacion3.jpg">
+        <img class="" src="img/publicacion3.jpg">
       </div>
-      <div class="card-content"><!--TarjetaI-->
-        <div class="row valign-wrapper"><!--FilaA-->
-          <div class="col s3 "><!--ColumnaA1: Imagen de usuario border-radius: 50%: forma circulas imagen-->
-            <img src="img/avatar4.jpg" style="border-radius: 50%;">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s3 valign-wrapper">          
+            <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> -->          
+            <img src="img/avatar4.jpg" alt="avatar" style="border-radius: 50%;">
           </div>
-          <div class="col s9"><!--ColumnaA2: Nombre del usuario-->
-            <b>Nombre de Usuario</b> publicó.
-          </div>
-        </div>  
-        <div class="row"><!--FilaB-->
-          <div class="col">
-            <span class="grey-text text-darken-4">Contenido de la publicación</span>
+          <div class="col s9">
+              <div class="">
+                <br>
+                <b>Nombre de usuario </b>publicó.
+              </div>       
           </div>
         </div>
-        <div class="row"><!--FilaC-->
+        <div class="row">
+          <div class="col s12">
+            Contenido de la publicación.
+          </div>
+        </div>
+        <div class="row">
           <div class="col s6">
-            <a href=""><i class="material-icons">thumb_up</i></a>10 me gusta
+            <i class="material-icons blue-text">thumb_up</i> 30 Me gusta
           </div>
           <div class="col s6 right-align">
-            Hace una hora
+            hace 1 hora
           </div>
         </div>
-      </div>
-    </div><!--Termina Tarjeta3-->
+      </div>    
+    </div>
 
-    <div class="card hoverable"><!--Tarjeta4-->
+    <div class="card">
       <div class="card-image waves-effect waves-block waves-light">
-        <img class="activator" src="img/publicacion4.jpg">
+        <img class="" src="img/publicacion5.jpg">
       </div>
-      <div class="card-content"><!--TarjetaI-->
-        <div class="row valign-wrapper"><!--FilaA-->
-          <div class="col s3 "><!--ColumnaA1: Imagen de usuario border-radius: 50%: forma circulas imagen-->
-            <img src="img/avatar4.jpg" style="border-radius: 50%;">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s3 valign-wrapper">          
+            <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> -->          
+            <img src="img/avatar.jpg" alt="avatar" style="border-radius: 50%;">
           </div>
-          <div class="col s9"><!--ColumnaA2: Nombre del usuario-->
-            <b>Nombre de Usuario</b> publicó.
-          </div>
-        </div>  
-        <div class="row"><!--FilaB-->
-          <div class="col">
-            <span class="grey-text text-darken-4">Contenido de la publicación</span>
+          <div class="col s9">
+              <div class="">
+                <br>
+                <b>Nombre de usuario </b>publicó.
+              </div>       
           </div>
         </div>
-        <div class="row"><!--FilaC-->
+        <div class="row">
+          <div class="col s12">
+            Contenido de la publicación.
+          </div>
+        </div>
+        <div class="row">
           <div class="col s6">
-            <a href=""><i class="material-icons">thumb_up</i></a>10 me gusta
+            <i class="material-icons blue-text">thumb_up</i> 40 Me gusta
           </div>
           <div class="col s6 right-align">
-            Hace una hora
+            hace 1 hora
           </div>
         </div>
-      </div>
-    </div><!--Termina Tarjeta4-->
+      </div>    
+    </div>
 
-    <div class="card hoverable"><!--Tarjeta5-->
+    <div class="card">
       <div class="card-image waves-effect waves-block waves-light">
-        <img class="activator" src="img/publicacion5.jpg">
+        <img class="" src="img/publicacion7.jpg">
       </div>
-      <div class="card-content"><!--TarjetaI-->
-        <div class="row valign-wrapper"><!--FilaA-->
-          <div class="col s3 "><!--ColumnaA1: Imagen de usuario border-radius: 50%: forma circulas imagen-->
-            <img src="img/avatar5.jpg" style="border-radius: 50%;">
+      <div class="card-content">
+        <div class="row">
+          <div class="col s3 valign-wrapper">          
+            <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> -->          
+            <img src="img/avatar5.jpg" alt="avatar" style="border-radius: 50%;">
           </div>
-          <div class="col s9"><!--ColumnaA2: Nombre del usuario-->
-            <b>Nombre de Usuario</b> publicó.
-          </div>
-        </div>  
-        <div class="row"><!--FilaB-->
-          <div class="col">
-            <span class="grey-text text-darken-4">Contenido de la publicación</span>
+          <div class="col s9">
+              <div class="">
+                <br>
+                <b>Nombre de usuario </b>publicó.
+              </div>       
           </div>
         </div>
-        <div class="row"><!--FilaC-->
+        <div class="row">
+          <div class="col s12">
+            Contenido de la publicación.
+          </div>
+        </div>
+        <div class="row">
           <div class="col s6">
-            <a href=""><i class="material-icons">thumb_up</i></a>10 me gusta
+            <i class="material-icons blue-text">thumb_up</i> 20 Me gusta
           </div>
           <div class="col s6 right-align">
-            Hace una hora
+            hace 1 hora
           </div>
         </div>
-      </div>
-    </div><!--Termina Tarjeta5-->
+      </div>    
+    </div>
 
   </div>
 </div>
 
-
 <div class="fixed-action-btn click-to-toggle">
-   <a id="btn-floating" class="btn-floating btn-large red">
+    <a id="btn-floating" class="btn-floating btn-large red">
       <i class="large material-icons">mode_edit</i>
     </a>
     <ul>
@@ -206,7 +225,7 @@
       <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
       <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
     </ul>
-</div>
+  </div>
 
   <!-- Tap Target Structure -->
   <div class="tap-target blue white-text" data-activates="btn-floating">
