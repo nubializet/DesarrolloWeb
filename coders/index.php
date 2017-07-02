@@ -88,30 +88,40 @@ if(!isset($_SESSION["login"]))
   </div>
 </nav>
 
-    <!-- Modal Structure -->
-    <div id="modalPublicacion" class="modal">
-
-      <div class="modal-content">
-        <h4>Nueva Publicación</h4>
+ 
+<!-- Modal Structure -->
+<div id="modalPublicacion" class="modal">
+  <div class="modal-content">
+    <h4>Nueva Publicación</h4>
+    
+    <div class="row">
+      <form id="formPublicacion" class=""  enctype="multipart/form-data">
         <div class="row">
-          <form id="formPublicacion" class="">
-            <div class="input-field col s12">
-              <textarea id="contenido" name="contenido" class="materialize-textarea"></textarea>
-              <label form="contenido">Contenido:</label>
-            </div>
-          </form>
+          <div class="input-field col s12">
+            <textarea id="contenido" name="contenido" class="materialize-textarea"></textarea>
+            <label for="contenido">Contenido:</label>
+          </div>
         </div>
-      </div>
-        <div class="modal-footer">
-      <a href="#!" id="guardarPublicacion" class="modal-action modal-close waves-effect waves-green btn-flat">Guardar</a>
+        <div class="row">
+          <div class="input-field col s12">
+            <input name="foto_publicacion" id="foto_publicacion" type="file" accept="image/*">            
+          </div>
+        </div>
+      </form>
     </div>
-    </div>
+
+  </div>
+  <div class="modal-footer">
+    <a href="#!" id="guardarPublicacion" class="modal-action waves-effect waves-green btn-flat">Guardar</a>
+  </div>
+</div>
 
 <div class="row">
     <div class="col s4 offset-s4" id="contenedorPublicaciones">
     
     </div>
 </div>
+
 
 <div class="fixed-action-btn click-to-toggle">
     <a id="btn-floating" class="btn-floating btn-large red">
@@ -134,7 +144,7 @@ if(!isset($_SESSION["login"]))
   </div>
 
 
-        <script src="ejemplo.js"></script>
+      <!--  <script src="ejemplo.js"></script>-->
 
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
 
@@ -163,23 +173,83 @@ if(!isset($_SESSION["login"]))
             $('#modalPublicacion').modal('open');     
           }); 
 
+var guardar = function()
+          {
+            // Esto se utiliza en lugar del serialize() cuando se usen imagene o archivos
+            var formData = new FormData($("#formPublicacion")[0]);
+              $.ajax({
+                url : "views/publicacionService.php",
+                message : "",
+                data : formData,       
+                processData: false,
+                contentType: false,
+                cache : false,
+                method : "POST",
+                dataType : "json",
+                success: function(res){
+                  console.log(res);                  
+                },
+                error: function(res){                             
+                    console.log(res);
+                    $('#modalPublicacion').modal("close");
+                    location.href = "";
+                }
+            });  
+          }
+
+
           $('#guardarPublicacion').on("click", function(e){
             e.preventDefault();
-            var form_data = $('#formPublicacion').serialize();
-            console.log(form_data);
+            guardar();
+          //   var form_data = $('#formPublicacion').serialize();
+          //   console.log(form_data);
 
-            $.post("views/publicacionService.php", form_data, function(res){
-              console.log(res);
-              if(res.success){
-                alert(res.mensaje);
-                $('#modalPublicacion').modal('close');
-              }
-              else{
-                alert(res.mensaje);
-              }
-            },"json");
+          //   $.post("views/publicacionService.php", form_data, function(res){
+          //     console.log(res);
+          //     if(res.success){
+          //       alert(res.mensaje);
+          //       $('#modalPublicacion').modal('close');
+          //     }
+          //     else{
+          //       alert(res.mensaje);
+          //     }
+          //   },"json");
        
-          }); 
+           }); 
+
+          mostrar_publicaciones = function(registros)
+          {
+            alert("Se recibieron los datos");
+            console.log(registros);
+            $.each(registros, function(index, publicacion){
+                console.log(publicacion);
+                publicacion.imagen = "publicaciones/" + publicacion.imagen;
+
+                $("#contenedorPublicaciones").prepend('<div class="card" id="publicacion_'+publicacion.id+'"> <div class="card-image waves-effect waves-block waves-light"> <img class="" src="' + publicacion.imagen + '"> </div> <div class="card-content"> <div class="row"> <div class="col s3 valign-wrapper"> <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> --> <img src="' + publicacion.avatar + '" alt="avatar" style="border-radius: 50%;"> </div> <div class="col s9"> <div class=""> <br> <b> ' + publicacion.nombre + " " + publicacion.apellido + ' </b>publicó. </div> </div> </div> <div class="row"> <div class="col s12"> '+publicacion.contenido+' </div> </div> <div class="row"> <div class="col s6"> <a href="javascript:;" class="action like blue-text"><i class="material-icons">thumb_up</i><span class="likes">' + publicacion.likes +'</span><span class="texto">Me gusta</span></a> </div> <div class="col s6 right-align"> '+publicacion.fecha+' </div> </div> </div> </div>');
+
+            });
+          
+          }
+
+          obtener_publicaciones = function()
+          {
+            $.getJSON("views/publicacionService.php?obtener", function(res){
+              console.log(res);
+              if(res.success == true)
+              {
+                mostrar_publicaciones(res.data)
+              }
+              else
+              {
+                alert("Ocurri un error al obtener los datos.");
+              }
+            });
+          }
+          obtener_publicaciones();
+
+
+
+
 
           // $(".mostrar").on("click", function(){
           //    // alert("LOL")    +           $('#modalPublicacion').modal('open');
@@ -206,14 +276,9 @@ if(!isset($_SESSION["login"]))
                 e.preventDefault();
                 // console.log(data)
               });
+            var data = [];
 
-          $.each(data, function(index, publicacion){
-                console.log(publicacion);
 
-                $("#contenedorPublicaciones").prepend('<div class="card" id="publicacion_'+publicacion.id+'"> <div class="card-image waves-effect waves-block waves-light"> <img class="" src="' + publicacion.foto + '"> </div> <div class="card-content"> <div class="row"> <div class="col s3 valign-wrapper"> <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> --> <img src="' + publicacion.avatar + '" alt="avatar" style="border-radius: 50%;"> </div> <div class="col s9"> <div class=""> <br> <b> ' + publicacion.usuario + ' </b>publicó. </div> </div> </div> <div class="row"> <div class="col s12"> '+publicacion.contenido+' </div> </div> <div class="row"> <div class="col s6"> <a href="javascript:;" class="action like blue-text"><i class="material-icons">thumb_up</i><span class="likes">' + publicacion.likes +'</span><span class="texto">Me gusta</span></a> </div> <div class="col s6 right-align"> '+publicacion.fecha+' </div> </div> </div> </div>');
-
-            });
-          
 
 
           $(".action").on("click", function(e){
