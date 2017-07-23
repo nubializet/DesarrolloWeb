@@ -80,7 +80,7 @@ if(!isset($_SESSION["login"]))
         </a>
       </li>
       <li>
-        <a href="">
+        <a href="contactos.php">
           <i class="material-icons green-text darken-1">person</i> Contactos
         </a>
       </li>
@@ -216,17 +216,120 @@ var guardar = function()
           //   },"json");
        
            }); 
+          //Cuadno se da click en el boton de like
+          dar_like = function(boton){
 
+          var idpublicacion = boton.parents(".card").attr("id");
+            
+            console.log(idpublicacion)
+            console.log("===========")
+            idpublicacion = idpublicacion.split("_");
+            
+            console.log(idpublicacion)
+            console.log("===========")
+            
+            idpublicacion = idpublicacion[1];
+            
+            console.log(idpublicacion)
+            console.log("===========")
+            var numero_likes = boton.find(".likes").text();
+            // alert(numero_likes + " Likes");
+            numero_likes = parseInt(numero_likes);
+
+            //Si se da like
+            if(boton.hasClass("like"))
+            {
+              $.getJSON("views/publicacionService.php?likes=&id=" + idpublicacion, function(res)
+              {
+                boton.removeClass("like").addClass("dislike");
+                boton.removeClass("blue-text").addClass("red-text");
+                boton.find("i").text("thumb_down");
+                boton.find(".texto").text("Ya no me gusta");              
+                numero_likes = numero_likes + 1;
+                boton.find(".likes").text(numero_likes);
+              });
+
+
+            }
+            else
+            {
+               $.getJSON("views/publicacionService.php?dislikes=&id=" + idpublicacion, function(res)
+              {
+                boton.removeClass("dislike").addClass("like"); 
+                boton.removeClass("red-text").addClass("blue-text");
+                boton.find("i").text("thumb_up");
+                boton.find(".texto").text("Me gusta");     
+                numero_likes = numero_likes - 1;
+                //Toma el valor de la base de datos
+                boton.find(".likes").text(numero_likes);
+              });
+           
+            }
+            boton.find(".likes").text(numero_likes);
+          }
           mostrar_publicaciones = function(registros)
           {
             alert("Se recibieron los datos");
             console.log(registros);
             $.each(registros, function(index, publicacion){
                 console.log(publicacion);
+
+                var conlike = publicacion.conlike;
+                var icon = "thumb_up";
+                var clase = "like";
+                var color = "blue-text";
+                var texto = "Me gusta";
+
+                if (conlike == 1)                
+                {
+                  icon = "thumb_down";
+                  clase = "dislike";
+                  color = "red-text";
+                  texto = "Ya no me gusta";
+                }
+
                 publicacion.imagen = "publicaciones/" + publicacion.imagen;
 
-                $("#contenedorPublicaciones").prepend('<div class="card" id="publicacion_'+publicacion.id+'"> <div class="card-image waves-effect waves-block waves-light"> <img class="" src="' + publicacion.imagen + '"> </div> <div class="card-content"> <div class="row"> <div class="col s3 valign-wrapper"> <!-- <span class="card-title activator grey-text text-darken-4">Card Title</span> --> <img src="' + publicacion.avatar + '" alt="avatar" style="border-radius: 50%;"> </div> <div class="col s9"> <div class=""> <br> <b> ' + publicacion.nombre + " " + publicacion.apellido + ' </b>publicó. </div> </div> </div> <div class="row"> <div class="col s12"> '+publicacion.contenido+' </div> </div> <div class="row"> <div class="col s6"> <a href="javascript:;" class="action like blue-text"><i class="material-icons">thumb_up</i><span class="likes">' + publicacion.likes +'</span><span class="texto">Me gusta</span></a> </div> <div class="col s6 right-align"> '+publicacion.fecha+' </div> </div> </div> </div>');
+                var pub = [
+                      '<div class="card" id="publicacion_'+publicacion.id+'">',
+                        '<div class="card-image waves-effect waves-block waves-light">',
+                        '<img class="" src="' + publicacion.imagen + '">',
+                      '</div>',
+                      '<div class="card-content">',
+                        '<div class="row">',
+                          '<div class="col s3 valign-wrapper">',
+                            '<img src="' + publicacion.avatar + '" alt="avatar" style="border-radius: 50%;">',
+                          '</div>',
+                      '<div class="col s9">',
+                      '<div class="">',
+                      '<br> <b> ' + publicacion.nombre + " " + publicacion.apellido + ' </b>publicó.',
+                      '</div>',
+                      '</div>',
+                      '</div>',
+                      '<div class="row">',
+                      '<div class="col s12"> '+publicacion.contenido+'',
+                      '</div>',
+                      '</div>',
+                      '<div class="row">',
+                      '<div class="col s6">',
+                      '<a href="javascript:;" class="action ' + clase + ' ' + color + '">',
+                      '<i class="material-icons">' + icon + '</i>',
+                      '<span class="likes">' + publicacion.likes +'</span>',
+                      '<span class="texto">' + texto + '</span>',
+                      '</a>',
+                      '</div>',
+                      '<div class="col s6 right-align"> '+publicacion.fecha+' </div>',
+                      '</div>',
+                      '</div>',
+                      '</div>',
+                      '</div>',
+                ].join("");
 
+                  $("#contenedorPublicaciones").prepend(pub).find(".action").first().on("click", function(e){
+               
+                  dar_like($(this));
+
+                  });
             });
           
           }
@@ -241,15 +344,11 @@ var guardar = function()
               }
               else
               {
-                alert("Ocurri un error al obtener los datos.");
+                alert("Ocurrio un error al obtener los datos.");
               }
             });
           }
           obtener_publicaciones();
-
-
-
-
 
           // $(".mostrar").on("click", function(){
           //    // alert("LOL")    +           $('#modalPublicacion').modal('open');
@@ -279,9 +378,20 @@ var guardar = function()
             var data = [];
 
 
-
+             procesar_respuesta = function(res){
+      if(res.success)
+        {
+          alert(res.mensaje);
+          
+        }
+        else
+        {
+          alert(res.mensaje);
+        }
+    }
 
           $(".action").on("click", function(e){
+            // alert("Antes");
             e.preventDefault();
             // alert("Le diste Me gusta");
             //$(this) hace referencia al elemento sobre el cual estoy trabajando actualmente (sobre el que le di click)
@@ -298,6 +408,7 @@ var guardar = function()
               $(this).find(".texto").text("Ya no me gusta");              
               numero_likes = numero_likes + 1;
 
+             
             }
             else
             {
@@ -307,11 +418,24 @@ var guardar = function()
               $(this).find(".texto").text("Me gusta");     
               numero_likes = numero_likes - 1;              
             }
+            //  $.post("views/loginService.php", numero_likes  ,procesar_respuesta, "json");
+            // $(this).find(".likes").text(numero_likes);   
+              
+              $.post("views/publicacionService.php", numero_likes, function(res){
+              console.log(res);
+              if(res.success){
+                alert(res.mensaje);
 
-            $(this).find(".likes").text(numero_likes);           
+              }
+              else{
+                alert(res.mensaje);
+              }
+            },"json");
+        
 
           });
 
+ 
         </script>
     </body>
 </html>

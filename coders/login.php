@@ -123,7 +123,7 @@ require_once $_SERVER["DOCUMENT_ROOT"] . "/coders/config.php";
       // alert("SUBMIT");
 
       var data = $(this).serialize();
-      // alert(data)
+      alert(data)
 
       $.post("views/loginService.php", data, procesar_respuesta , "json");
 
