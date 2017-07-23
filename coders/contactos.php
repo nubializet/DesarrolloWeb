@@ -85,18 +85,39 @@ if(!isset($_SESSION["login"]))
   </div>
 </nav>
 <!-- Formulario para ingresar el correo del usuario a quien se agregar como contacto -->
-<form id="InvitarForm" action="">
-  <div class="row">
-    <div class="col s12">            
-      <div class="input-field inline">
-        <input name="email" id="email" type="email" class="validate">
-        <label for="email" data-error="El formato es incorrecto" data-success="right">Email</label> 
-        <button type="submit" class="btn waves-effect waves-light">Invitar</button>
+<div class="row">
+        <div class="col s4">
+
+          <div class="row">
+            <div class="col s12">
+              <form id="InvitarForm" action="">
+                <div class="row">
+                  <div class="col s12">            
+                    <div class="input-field inline">
+                      <input name="email" id="email" type="email" class="validate">
+                      <label for="email" data-error="El formato es incorrecto" data-success="right">Email</label>              
+                      <button type="submit" class="btn waves-effect waves-light">Invitar</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <div id="listaSolicitud">
+                
+              </div>
+            </div>
+          </div>
+          
+
+        </div>
+        <div class="col s8">
+          <div id="listaContactos"></div>
+        </div>      
+
       </div>
-    </div>
-  </div>
-</form>
- 
 
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
         <script>window.jQuery || document.write('<script src="<?php echo APPNAME; ?>/js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
@@ -107,12 +128,53 @@ if(!isset($_SESSION["login"]))
         <script>
           $(".button-collapse").sideNav();
 
-          obtener_datos = function()//Lista de los contactos que tiene el usuario
-          {
-            $.getJSON("views/contactoService.php?obtener=", function(res){
-              console.log(res);
+
+ mostrar_contactos = function(contactos)
+        {
+          var lista = '<ul class="collection with-header">';
+          lista += '<li class="collection-header"><h4>Contactos</h4></li>';
+          if(contactos.length > 0)
+          {           
+            $.each(contactos, function(indice, elemento){
+              
+              var usuario = elemento.contacto;
+              lista += '<li class="collection-item">';
+              lista += '<div>';
+              lista += '<b>' + usuario["nombre"] + " " + usuario["apellido"] + '</b>';
+              lista += "<br>";
+              lista += usuario["username"];
+              lista += '<a id="' + usuario["id"] + '" href="#!" class="secondary-content aceptar">'
+              lista += '<i class="material-icons">send</i></a>'
+              lista += '</div>';
+              lista += '</li>';
             });
-          }();
+          }
+          else
+          {
+            lista += '<li class="collection-item">';
+            lista += '<div>No hay contactos.</div>';
+            lista += '</li>';            
+          }
+          lista += '</ul>';
+          $("#listaContactos")
+            .html(lista);                       
+        }
+
+        obtener_datos = function()
+        {
+          $.getJSON("views/contactoService.php?obtener=", function(res){
+            console.log(res);
+            if(res.success)
+            {
+              mostrar_contactos(res.data);
+            }
+            else
+            {
+              mostrar_contactos([]);
+            }
+          });
+        }();
+
 
           enviar_solicitud = function(data)//Envia la solicitud de contactos(invitar)
           {
@@ -129,12 +191,88 @@ if(!isset($_SESSION["login"]))
             });
           }
 
+        aceptar_solicitud = function(idsolicitud, elem)
+        {
+          $.getJSON("views/contactoService.php?aceptar=", {"id" : idsolicitud}, function(res){
+            if(res.success)
+            {
+              elem.parents("li").remove();
+              
+              var elementos_lista = $("#listaSolicitud").find("li.collection-item");              
+              if(elementos_lista.length == 0)
+              {
+                var vacio = '<li class="collection-item">';
+                vacio += '<div>No hay solicitudes pendientes.</div>';
+                vacio += '</li>';
+                $("#listaSolicitud > ul").append(vacio);
+              }
+            }
+          });
+        }
+
+          obtener_solicitudes = function()
+        {
+          $.getJSON("views/contactoService.php?solicitudes=", function(res){
+            console.log(res);
+            if(res.success)
+            {
+              console.log(res.data);
+              mostrar_solicitudes(res.data);
+            }
+            else
+            {
+              mostrar_solicitudes([]);
+            }
+          });
+        }();
+
           $("#InvitarForm").on("submit", function(e){
             e.preventDefault();
             var data = $(this).serialize();
             // console.log(data);
             enviar_solicitud(data);
           });
+          //Lee las solicitudes y las muestra en la pagina
+          mostrar_solicitudes = function(solicitudes)
+          {
+           var lista = '<ul class="collection with-header">';
+          lista += '<li class="collection-header"><h4>Solicitudes Pendientes</h4></li>';
+          if(solicitudes.length > 0)
+          {     //Recorrid de un elemento      
+            $.each(solicitudes, function(indice, elemento){
+              
+              var usuario = elemento.idusuario[0];
+              lista += '<li class="collection-item">';
+              lista += '<div>';
+              lista += '<b>' + usuario["nombre"] + " " + usuario["apellido"] + '</b>';
+              lista += "<br>";
+              lista += elemento["fecha"];
+              lista += '<a id="' + elemento["idsolicitud"] + '" href="#!" class="secondary-content aceptar tooltipped" data-tooltip="Aceptar Solicitud de Contacto.">'
+              lista += '<i class="material-icons">check</i></a>'
+              lista += '</div>';
+              lista += '</li>';
+            });
+          }
+          else
+          {
+            lista += '<li class="collection-item">';
+            lista += '<div>No hay solicitudes pendientes.</div>';
+            lista += '</li>';            
+          }
+          lista += '</ul>';
+          $("#listaSolicitud")
+            .html(lista)
+            .find(".aceptar")
+            .on("click", function(){
+              alert("OK");
+              var idsolicitud = $(this).attr("id");
+              aceptar_solicitud(idsolicitud, $(this));
+            });
+          $('.tooltipped').tooltip({position: "right", delay: 200});
+               
+         }
+
+
           // obtener_datos();
         </script>
     </body>

@@ -37,7 +37,7 @@
 		$res = call($conn, $sql);
 		if(count($res) == 0)//Si no hay invitacion, la envia 
 		{
-			$sql = "INSERT INTO solicitudes(idusuario, idcontacto) VALUES ('$idusuario', '$idcontacto')";
+			$sql = "INSERT INTO solicitudes(idusuario, idcontacto) VALUES ('$idusuario', '$idcontacto', '".date("Y-m-d"). "')";
 			$idsolicitud = call($conn, $sql, 1);
 			return $idsolicitud;//Regresar valor cuando es la primera solicitud
 		}
@@ -66,12 +66,14 @@
 		}
 	}
 
-	//Funcion obtener contactos del usuario
-	function obtener_contactos($conn)
+
+
+	
+	function obtener_datos_solicitud($conn, $idsolicitud)
 	{
-		$idusuario = $_SESSION["usuario"];
-		$sql = "SELECT * FROM contactos WHERE idusuario = '$idusuario'";
+		$sql = "SELECT * FROM solicitudes WHERE idsolicitud = '$idsolicitud'";
 		$res = call($conn, $sql);
+		// var_dump($sql);
 		if(count($res) > 0)
 		{
 			return array("success" => true, "data" => $res);
@@ -81,16 +83,124 @@
 			return array("success" => false);
 		}
 	}
+	function aceptar_solicitud($conn, $idsolicitud)
+	{
+		$sql = "UPDATE solicitudes SET estatus='1' WHERE idsolicitud='$idsolicitud'";
+		call($conn, $sql);
+		$solicitud = obtener_datos_solicitud($conn, $idsolicitud);
+		if($solicitud["success"])
+		{
+			$solicitud = $solicitud["data"][0];
+			$idusuario = $solicitud["idusuario"];
+			$idcontacto = $solicitud["idcontacto"];
+			$sql = "INSERT INTO contactos (idusuario, idcontacto, fecha) VALUES ('$idusuario', '$idcontacto', '".date("Y-m-d")."')";
+			$new_contacto = call($conn, $sql, 1);
+			if($new_contacto)
+			{
+				return array("success" => true, "id" => $new_contacto);
+			}
+
+		}
+		// echo $sql;
+		return array("success" => true);
+	}
+	//Obtener datos del un usuario
+	function obtener_datos_usuario($conn, $idusuario)
+	{
+		$sql = "SELECT id, nombre, apellido, username FROM usuarios WHERE id = '$idusuario'";
+		$res = call($conn, $sql);
+		if(count($res) > 0)
+		{
+			return array("success" => true, "data" => $res);
+		}
+		else
+		{
+			return array("success" => false, "error" => "No se pudieron obtener datos del usuario.");
+		}
+	}
+	//Funcion para obtener solicitudes pendientes 
+	function obtener_solicitudes($conn)
+	{
+		$idusuario = $_SESSION["usuario"];
+		//El estatus debe ser 0 = Pendiente
+		$sql = "SELECT * FROM solicitudes WHERE idcontacto = '$idusuario' AND estatus = 0";
+		$res = call($conn, $sql);
+		//var_dump($res);
+		if(count($res) > 0)
+		{
+			foreach ($res as $key => $row) {
+				$row_idusuario = $row["idusuario"];
+				$info_usuario = obtener_datos_usuario($conn, $row_idusuario);
+				if($info_usuario["success"])
+				{
+					//Codifica el nombre y apellido para caracteres epeciales
+					$info_usuario["data"][0]["nombre"] = utf8_encode($info_usuario["data"][0]["nombre"]);
+					$info_usuario["data"][0]["apellido"] = utf8_encode($info_usuario["data"][0]["apellido"]);
+					//
+					$res[$key]["idusuario"] = $info_usuario["data"];
+				}			
+			}
+			return array("success" => true, "data" => $res);
+		}
+		else
+		{
+			return array("success" => false, "error" => "No se encontraron solicitudes pendientes");
+		}
+	}
+
+	//Funcion obtener contactos del usuario
+	function obtener_contactos($conn)
+	{
+		$idusuario = $_SESSION["usuario"];
+		$sql = "SELECT * FROM contactos WHERE idusuario = '$idusuario' OR idcontacto = '$idusuario'";
+		$res = call($conn, $sql);
+		if(count($res) > 0)
+		{
+			foreach ($res as $key => $contacto) {
+				
+				if($contacto["idcontacto"] != $idusuario)
+				{
+					$idres = $contacto["idcontacto"];				
+				}
+				else
+				{
+					$idres = $contacto["idusuario"];
+				}
+				$info = obtener_datos_usuario($conn, $idres);	
+				if($info["success"])
+				{
+					$res[$key]["contacto"] = $info["data"][0];
+				}
+			}
+			return array("success" => true, "data" => $res);
+		}
+		else
+		{
+			return array("success" => false, "error" => "No hay contactos registrados.");
+		}
+	}
+
 	$res = array();
 
-	//Si llega la información, se dirige a obtener contactos
+	//Si llega la información, se dirige a obtener contactos/solicitudes/Aceptar
+	//Esta información se manda a la base de datos
 	if(isset($_GET["obtener"]))
 	{
-		$res = ontener_contactos($conn);
+		$res = obtener_contactos($conn);
 	}
 	else if(isset($_GET["invitar"]) && isset($_GET["email"]))
 	{
 		$res = invitar_usuario($conn, $_GET);
+	}
+	else if(isset($_GET["solicitudes"]))
+	{
+		//echo "Hola";
+		$res = obtener_solicitudes($conn);
+		//var_dump($res);
+	}
+	else if(isset($_GET["aceptar"]) && isset($_GET["id"]))//Aceptar la solictud de contacto
+	{
+		$res = aceptar_solicitud($conn, $_GET["id"]);
 	}
 	echo json_encode($res);
 ?>
