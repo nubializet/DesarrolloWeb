@@ -60,8 +60,12 @@ if(!isset($_SESSION["login"]))
     <ul class="side-nav" id="mobile-demo">
       <li>
         <div class="row">
-            <div class="col s4">                          
-              <img src="<?php echo APP; ?>/img/logo.png" alt="logo" class="avatar" style="width: 70px; border-radius: 50%;">              
+            <div class="col s4">  
+            <form id="formLogo" enctype="multipart/form-data">
+                        
+              <img src="<?php echo APP; ?>/img/logo.png" alt="logo" class="avatar" style="width: 70px; border-radius: 50%;">     
+              <input type="file" name="logo" id="logo" accept="image/*">    
+              </form>     
             </div>
             <div class="col s8">
               <b class="username">Gerardo A Lopez Vega</b>
@@ -389,6 +393,39 @@ var guardar = function()
           alert(res.mensaje);
         }
     }
+              //Funcion para obtener datos del formulario de avatar
+    guardarFoto = function()
+    {
+      var formData = new FormData($("#formLogo")[0]);
+       $.ajax({
+         url : "views/perfilService.php?action=foto",
+              message : "",
+              data : formData,
+              processData: false,
+              contentType: false,
+              cache : false,
+              method : "POST",
+              dataType : "json",
+              success: function(res)
+              {
+              if(res.success)
+              {
+              var file = "img/perfiles/" + res.file;
+              $("#formLogo img").attr("src", file);
+              }
+              },
+              error: function(res){
+              console.log(res);
+              }
+              });
+              }
+
+
+            //Imagen Avatar
+            $("input[name='logo']").on("change", function(){
+            guardarFoto();
+            });
+
 
           $(".action").on("click", function(e){
             // alert("Antes");
@@ -407,8 +444,6 @@ var guardar = function()
               $(this).find("i").text("thumb_down");
               $(this).find(".texto").text("Ya no me gusta");              
               numero_likes = numero_likes + 1;
-
-             
             }
             else
             {
@@ -432,6 +467,7 @@ var guardar = function()
               }
             },"json");
         
+
 
           });
 
