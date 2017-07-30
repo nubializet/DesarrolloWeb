@@ -65,15 +65,12 @@
 			return array("success" => false, "error" => "El usuario no existe");
 		}
 	}
-
-
-
-	
+	//
 	function obtener_datos_solicitud($conn, $idsolicitud)
 	{
 		$sql = "SELECT * FROM solicitudes WHERE idsolicitud = '$idsolicitud'";
 		$res = call($conn, $sql);
-		// var_dump($sql);
+		
 		if(count($res) > 0)
 		{
 			return array("success" => true, "data" => $res);
@@ -83,6 +80,7 @@
 			return array("success" => false);
 		}
 	}
+	//Aceptar la solicitud
 	function aceptar_solicitud($conn, $idsolicitud)
 	{
 		$sql = "UPDATE solicitudes SET estatus='1' WHERE idsolicitud='$idsolicitud'";
@@ -101,10 +99,9 @@
 			}
 
 		}
-		// echo $sql;
 		return array("success" => true);
 	}
-	//Obtener datos del un usuario
+	//Obtener datos de un usuario
 	function obtener_datos_usuario($conn, $idusuario)
 	{
 		$sql = "SELECT id, nombre, apellido, username FROM usuarios WHERE id = '$idusuario'";
@@ -147,8 +144,7 @@
 			return array("success" => false, "error" => "No se encontraron solicitudes pendientes");
 		}
 	}
-
-	//Funcion obtener contactos del usuario
+	//Funcion obtener contactos del usuario actualizada
 	function obtener_contactos($conn)
 	{
 		$idusuario = $_SESSION["usuario"];
@@ -179,6 +175,21 @@
 			return array("success" => false, "error" => "No hay contactos registrados.");
 		}
 	}
+	//Envia el mensaje al contacto
+	function enviar_mensaje($conn, $data)
+	{
+		$idusuario = $_SESSION["usuario"];//Lo toma de la sesion
+		$idcontacto = $data["idcontacto"];//Viene en los parametros
+		$msj = $data["mensaje"];
+		$fecha = date("Y-m-d");
+		$sql = "INSERT INTO notificaciones (idusuario, idcontacto, mensaje, fecha) VALUES ('$idusuario', '$idcontacto', '$msj', '$fecha')";
+		$idnewnotificacion = call($conn, $sql, 1);
+		if($idnewnotificacion)
+		{
+			return array("success" => true, "id" => $idnewnotificacion);
+		}
+		return array("success" => false);
+	}
 
 	$res = array();
 
@@ -188,19 +199,21 @@
 	{
 		$res = obtener_contactos($conn);
 	}
-	else if(isset($_GET["invitar"]) && isset($_GET["email"]))
+	else if(isset($_GET["invitar"]) && isset($_GET["email"]))//Cuando invitas a un contacto como amigo 
 	{
 		$res = invitar_usuario($conn, $_GET);
 	}
 	else if(isset($_GET["solicitudes"]))
 	{
-		//echo "Hola";
 		$res = obtener_solicitudes($conn);
-		//var_dump($res);
 	}
 	else if(isset($_GET["aceptar"]) && isset($_GET["id"]))//Aceptar la solictud de contacto
 	{
 		$res = aceptar_solicitud($conn, $_GET["id"]);
+	}
+	else if(isset($_GET["mensaje"]) && isset($_POST["mensaje"]) && isset($_POST["idcontacto"]))//Enviar mensaje a un contacto
+	{
+		$res = enviar_mensaje($conn, $_POST);
 	}
 	echo json_encode($res);
 ?>

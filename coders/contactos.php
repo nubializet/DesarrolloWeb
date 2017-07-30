@@ -36,54 +36,26 @@ if(!isset($_SESSION["login"]))
         <script src="<?php echo APPNAME; ?>/js/vendor/modernizr-2.8.3.min.js"></script>
     </head>
     <body>        
-
-       <ul id="dropdown1" class="dropdown-content">
-  <li><a href="#!" class="pink-text">
-    <i class="material-icons">face</i>
-    Mi Perfil</a></li>  
-  <li class="divider"></li>
-  <li><a href="<?php echo APP; ?>/login.php" class="pink-text">
-    <i class="material-icons">flight_takeoff</i>
-    Salir</a></li>
-</ul>
-
-<nav>
-  <div class="nav-wrapper">
-    <a href="#!" class="brand-logo appname" id="nombreapp">Coders!</a>
-    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-    <ul class="right hide-on-med-and-down">      
-      <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Gerardo Lopez<i class="material-icons right">arrow_drop_down</i></a></li>    
-    </ul>
-    <ul class="side-nav" id="mobile-demo">
-      <li>
-        <div class="row">
-            <div class="col s4">                          
-              <img src="<?php echo APP; ?>/img/logo.png" alt="logo" class="avatar" style="width: 70px; border-radius: 50%;">              
+<!-- Barra de menu-->
+  <?php require_once "menu.php";?> 
+  <!-- TXT para mensaje-->
+      <div id="modalChat" class="modal">
+        <div class="modal-content">
+          <h4>Nuevo Mensaje</h4>
+          <div class="row">
+            <div class="input-field col s12">
+              <textarea id="mensaje" name="mensaje" class="materialize-textarea"></textarea>
+              <label for="textarea1">Mensaje:</label>
             </div>
-            <div class="col s8">
-              <b class="username">Gerardo A Lopez Vega</b>
-              <span class="email">mcgalv@gmail.com</span>              
-            </div>
+          </div>
         </div>
-      </li>  
-      <li>
-        <a href="">
-          <i class="material-icons orange-text darken-1">star</i> Favoritos
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <i class="material-icons blue-text">image</i> Fotos
-        </a>
-      </li>
-      <li>
-        <a href="contactos.php">
-          <i class="material-icons green-text darken-1">person</i> Contactos
-        </a>
-      </li>
-    </ul>
-  </div>
-</nav>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action waves-effect waves-green btn-flat mensaje-send">Enviar</a>
+
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        </div>
+      </div>
+
 <!-- Formulario para ingresar el correo del usuario a quien se agregar como contacto -->
 <div class="row">
         <div class="col s4">
@@ -110,8 +82,6 @@ if(!isset($_SESSION["login"]))
               </div>
             </div>
           </div>
-          
-
         </div>
         <div class="col s8">
           <div id="listaContactos"></div>
@@ -127,15 +97,15 @@ if(!isset($_SESSION["login"]))
 
         <script>
           $(".button-collapse").sideNav();
+          $('.modal').modal();//Abre el area txt del mensaje
 
-
- mostrar_contactos = function(contactos)
+        mostrar_contactos = function(contactos)
         {
           var lista = '<ul class="collection with-header">';
           lista += '<li class="collection-header"><h4>Contactos</h4></li>';
           if(contactos.length > 0)
           {           
-            $.each(contactos, function(indice, elemento){
+             $.each(contactos, function(indice, elemento){
               
               var usuario = elemento.contacto;
               lista += '<li class="collection-item">';
@@ -143,8 +113,8 @@ if(!isset($_SESSION["login"]))
               lista += '<b>' + usuario["nombre"] + " " + usuario["apellido"] + '</b>';
               lista += "<br>";
               lista += usuario["username"];
-              lista += '<a id="' + usuario["id"] + '" href="#!" class="secondary-content aceptar">'
-              lista += '<i class="material-icons">send</i></a>'
+              lista += '<a id="' + usuario["id"] + '" href="#!" class="secondary-content chat">'
+              lista += '<i class="material-icons">chat</i></a>'              
               lista += '</div>';
               lista += '</li>';
             });
@@ -156,8 +126,13 @@ if(!isset($_SESSION["login"]))
             lista += '</li>';            
           }
           lista += '</ul>';
+          //Mostrar la lista de contactos
           $("#listaContactos")
-            .html(lista);                       
+            .html(lista).find(".chat").on("click", function(){
+                var idUsuario = $(this).attr("id");
+               $('#modalChat').data("id", idUsuario).modal('open');
+                
+            });                  
         }
 
         obtener_datos = function()
@@ -174,7 +149,6 @@ if(!isset($_SESSION["login"]))
             }
           });
         }();
-
 
           enviar_solicitud = function(data)//Envia la solicitud de contactos(invitar)
           {
@@ -210,7 +184,7 @@ if(!isset($_SESSION["login"]))
           });
         }
 
-          obtener_solicitudes = function()
+        obtener_solicitudes = function()
         {
           $.getJSON("views/contactoService.php?solicitudes=", function(res){
             console.log(res);
@@ -226,6 +200,33 @@ if(!isset($_SESSION["login"]))
           });
         }();
 
+        //Dar clic en el boton enviar del mensaje
+        $(".mensaje-send").on("click", function(){
+          // alert("ok")
+          var mensaje = $("#modalChat").find("#mensaje").val();
+          console.log(mensaje)
+          var idcontacto = $("#modalChat").data("id");//Obteniene el id del contacto 
+          console.log(idcontacto)
+          //Parametros que se envian en el POST
+          var params = {
+            "mensaje" : mensaje,
+            "idcontacto" : idcontacto
+          }
+          $.post("views/contactoService.php?mensaje=", params, function(res){
+            console.log(res);
+            es = $.parseJSON(res);
+            console.log(res);
+            if(res.success)//Si fue exitoso limpiar las variables
+            {
+              $("#modalChat").find("#mensaje").val("");
+              $("#modalChat").removeData("id");
+            }
+          });
+
+          $("#modalChat").modal("close");
+        });
+
+
           $("#InvitarForm").on("submit", function(e){
             e.preventDefault();
             var data = $(this).serialize();
@@ -238,7 +239,7 @@ if(!isset($_SESSION["login"]))
            var lista = '<ul class="collection with-header">';
           lista += '<li class="collection-header"><h4>Solicitudes Pendientes</h4></li>';
           if(solicitudes.length > 0)
-          {     //Recorrid de un elemento      
+          {     //Recorrido de un elemento      
             $.each(solicitudes, function(indice, elemento){
               
               var usuario = elemento.idusuario[0];

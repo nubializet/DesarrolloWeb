@@ -20,9 +20,10 @@ if(!isset($_SESSION["login"]))
     define("APP", "/coders");
 
 ?>
+
 <!doctype html>
 <html class="no-js" lang="">
-    <head>
+  <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Coders! Web Developers Love.!</title>
@@ -38,96 +39,40 @@ if(!isset($_SESSION["login"]))
         <link rel="stylesheet" href="<?php echo APPNAME; ?>/css/main.css">
         <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah" rel="stylesheet">
         <script src="<?php echo APPNAME; ?>/js/vendor/modernizr-2.8.3.min.js"></script>
-    </head>
-    <body>        
-
-       <ul id="dropdown1" class="dropdown-content">
-  <li><a href="#!" class="pink-text">
-    <i class="material-icons">face</i>
-    Mi Perfil</a></li>  
-  <li class="divider"></li>
-  <li><a href="<?php echo APP; ?>/login.php" class="pink-text">
-    <i class="material-icons">flight_takeoff</i>
-    Salir</a></li>
-</ul>
-<nav>
-  <div class="nav-wrapper">
-    <a href="#!" class="brand-logo appname" id="nombreapp">Coders!</a>
-    <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-    <ul class="right hide-on-med-and-down">      
-      <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Gerardo Lopez<i class="material-icons right">arrow_drop_down</i></a></li>    
-    </ul>
-    <ul class="side-nav" id="mobile-demo">
-      <li>
+  </head>
+  <body> 
+  <!-- Barra de menu-->       
+  <?php require_once "menu.php";?>
+  <!-- Abre la ventana para subir una nueva publicacion-->
+  <div id="modalPublicacion" class="modal">
+    <div class="modal-content">
+      <h4>Nueva Publicación</h4>
         <div class="row">
-            <div class="col s4">  
-            <form id="formLogo" enctype="multipart/form-data">
-                        
-              <img src="<?php echo APP; ?>/img/logo.png" alt="logo" class="avatar" style="width: 70px; border-radius: 50%;">     
-              <input type="file" name="logo" id="logo" accept="image/*">    
-              </form>     
+          <form id="formPublicacion" class=""  enctype="multipart/form-data">
+            <div class="row">
+              <div class="input-field col s12">
+                <textarea id="contenido" name="contenido" class="materialize-textarea"></textarea>
+                <label for="contenido">Contenido:</label>
+              </div>
             </div>
-            <div class="col s8">
-              <b class="username">Gerardo A Lopez Vega</b>
-              <span class="email">mcgalv@gmail.com</span>              
+            <div class="row">
+              <div class="input-field col s12">
+                <input name="foto_publicacion" id="foto_publicacion" type="file" accept="image/*">            
+              </div>
             </div>
+          </form>
         </div>
-      </li>  
-      <li>
-        <a href="">
-          <i class="material-icons orange-text darken-1">star</i> Favoritos
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <i class="material-icons blue-text">image</i> Fotos
-        </a>
-      </li>
-      <li>
-        <a href="contactos.php">
-          <i class="material-icons green-text darken-1">person</i> Contactos
-        </a>
-      </li>
-    </ul>
-  </div>
-</nav>
-
- 
-<!-- Modal Structure -->
-<div id="modalPublicacion" class="modal">
-  <div class="modal-content">
-    <h4>Nueva Publicación</h4>
-    
-    <div class="row">
-      <form id="formPublicacion" class=""  enctype="multipart/form-data">
-        <div class="row">
-          <div class="input-field col s12">
-            <textarea id="contenido" name="contenido" class="materialize-textarea"></textarea>
-            <label for="contenido">Contenido:</label>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input name="foto_publicacion" id="foto_publicacion" type="file" accept="image/*">            
-          </div>
-        </div>
-      </form>
     </div>
-
-  </div>
-  <div class="modal-footer">
-    <a href="#!" id="guardarPublicacion" class="modal-action waves-effect waves-green btn-flat">Guardar</a>
-  </div>
-</div>
-
-<div class="row">
-    <div class="col s4 offset-s4" id="contenedorPublicaciones">
-    
+    <div class="modal-footer">
+      <a href="#!" id="guardarPublicacion" class="modal-action waves-effect waves-green btn-flat">Guardar</a>
     </div>
-</div>
-
-
-<div class="fixed-action-btn click-to-toggle">
+  </div>
+  <!--Espacio donde se encuentran las publicaciones-->
+  <div class="row">
+      <div class="col s4 offset-s4" id="contenedorPublicaciones"></div>
+  </div>
+  <!-- -->
+  <div class="fixed-action-btn click-to-toggle">
     <a id="btn-floating" class="btn-floating btn-large red">
       <i class="large material-icons">mode_edit</i>
     </a>
@@ -138,7 +83,6 @@ if(!isset($_SESSION["login"]))
       <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
     </ul>
   </div>
-
   <!-- Tap Target Structure -->
   <div class="tap-target blue white-text" data-activates="btn-floating">
     <div class="tap-target-content">
@@ -146,28 +90,14 @@ if(!isset($_SESSION["login"]))
       <p>A bunch of text</p>
     </div>
   </div>
-
-
-      <!--  <script src="ejemplo.js"></script>-->
-
-        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-
-
-        <script>window.jQuery || document.write('<script src="<?php echo APPNAME; ?>/js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
-        <script src="<?php echo APPNAME; ?>/js/plugins.js"></script>
-        <script src="<?php echo APPNAME; ?>/js/materialize.min.js"></script>
-        <script src="<?php echo APPNAME; ?>/js/main.js"></script>
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='https://www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
-        </script>
-
+  <!-- INICIA PARTE SCRIPT-->
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script>window.jQuery || document.write('<script src="<?php echo APPNAME; ?>/js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+  <script src="<?php echo APPNAME; ?>/js/plugins.js"></script>
+  <script src="<?php echo APPNAME; ?>/js/materialize.min.js"></script>
+  <script src="<?php echo APPNAME; ?>/js/main.js"></script>
+ 
+  
         <script>
 
           $(".button-collapse").sideNav();
@@ -177,7 +107,7 @@ if(!isset($_SESSION["login"]))
             $('#modalPublicacion').modal('open');     
           }); 
 
-var guardar = function()
+          var guardar = function()
           {
             // Esto se utiliza en lugar del serialize() cuando se usen imagene o archivos
             var formData = new FormData($("#formPublicacion")[0]);
@@ -382,17 +312,17 @@ var guardar = function()
             var data = [];
 
 
-             procesar_respuesta = function(res){
-      if(res.success)
-        {
-          alert(res.mensaje);
-          
+          procesar_respuesta = function(res){
+          if(res.success)
+            {
+              alert(res.mensaje);
+              
+            }
+            else
+            {
+              alert(res.mensaje);
+            }
         }
-        else
-        {
-          alert(res.mensaje);
-        }
-    }
               //Funcion para obtener datos del formulario de avatar
     guardarFoto = function()
     {
